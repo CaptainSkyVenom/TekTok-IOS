@@ -10,15 +10,42 @@ import UIKit
 
 class TableViewController: UITableViewController {
 
+    var ticketList:[Ticket] = GVar.tickets
+    var selectedTicket:Ticket = Ticket()
+    @IBOutlet var tableview: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
+    override func viewDidAppear(animated: Bool) {
+        tableView.reloadData()
+        
+        if(ticketList.count > 0){
+            print("has tickets")
+        }
+        
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("cell")! as UITableViewCell
+        
+        cell.textLabel?.text = self.ticketList[indexPath.row].teachername
+        print(ticketList[0].teachername)
+        return cell
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        //check if already accepted
+        
+        selectedTicket = ticketList[indexPath.row]
+        performSegueWithIdentifier("toticketinfo", sender: nil)
+    }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -29,12 +56,12 @@ class TableViewController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return self.ticketList.count
     }
 
     /*
@@ -82,14 +109,19 @@ class TableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "toticketinfo"{
+            if let destinationVC = segue.destinationViewController as? TicketInfoViewController {
+                destinationVC.ticket = selectedTicket
+            }
+        }
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-    */
+    
 
 }
